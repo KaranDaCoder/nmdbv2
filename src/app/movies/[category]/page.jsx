@@ -1,30 +1,47 @@
+"use client";
 import FilteredList from '@/components/FilteredList'
 import Sidebar from '@/components/Sidebar'
-import React from 'react'
+import { useFilterContext } from '@/app/contexts/FiterContext';
+import { useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
 
+const fetchUserObj = async(username) => {
+  try {
+    const request = await fetch(`http://localhost:3000/api/users/${username}`);
+    const response = await request.json();
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+}
 
-// const fetchMovieListWithCategory = async (category) => {
-//   try {
-//     const request = await fetch(`http://localhost:3000/api/movies/${category}` , {cache : 'no-store'});
-//     if(request.status === 200) {
-//       const response = await request.json();
-//       return response;
-//     } else{
-//       return request.status
-//     }
-//   } catch (error) {
-//     console.log(error);
-//   }
-// }
+const Category =  ({params}) => {
+  const {filter, setFilter} = useFilterContext();
+  const [userData, setUserData] = useState({})
 
-const Category = async ({params}) => {
-  // const results = await fetchMovieListWithCategory(params.category);
-  // console.log(results.length);
+  const {status, data} = useSession();
+  useEffect(()=> {
+      const getUserObject = async () => {
+      if(status === 'unauthenticated' || status==='loading') {
+        setUserData([]);
+      } else {
+        const returnUserObj = await fetchUserObj(data?.user?.username);
+        setUserData(returnUserObj);
+      }
+    }
+    getUserObject();
+  }, [data?.user?.username])
+  console.log(userData)
   return (
-    <div className='min-h-screen lg:divide-y-reverse w-full flex justify-between flex-col lg:flex-row gap-4'>
-      <Sidebar cat={params.category} />
-
-      <FilteredList cat={params.category} />
+    <div className='min-h-screen  w-full flex justify-start flex-col lg:flex-row gap-4'>
+      <Sidebar cat={params.category}  setFilter={setFilter}/>
+      <FilteredList
+        cat={params.category}
+        filter={filter}
+        session_status = {status}
+        user_obj = {userData}
+      />
+      
     </div>
   );
 }

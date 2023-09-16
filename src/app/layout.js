@@ -17,12 +17,12 @@ export default function RootLayout({ children }) {
 
       <body className={`${inter.className} antialiased min-h-screen overflow-x-hidden flex flex-col justify-between`}>
         <AuthProvider>
-
         <Navbar />
         <main className='mx-auto container'>
         {children}
         <Footer/>
         </main>
+    
         </AuthProvider>
       </body>
     </html>

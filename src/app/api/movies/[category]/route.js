@@ -4,7 +4,10 @@ import { NextResponse } from "next/server";
 
 
 export const GET = async(request, {params}) => {
-  await connectDb();
+ const url = new URL(request.url);
+ const filter = url.searchParams.get("filter");
+ console.log(filter)
+
 let {category} = params;
 if(category === 'top-rated-movies') {
  category = 'topRatedMovie';
@@ -21,11 +24,30 @@ if(category === 'top-indian-movies') {
 if(category === 'worst-ever-movies'){
   category = 'worstAllTime';
 }
+
  try {
-   const fetchedWithCategory = await Movie.find({global_category : category});
+   await connectDb();
+   let fetchedWithCategory = await Movie.find({ global_category: category });
+   if(filter === 'ratingAscending'){
+      const fetchedWithCategory = await Movie.find({global_category : category}).sort({imdbRating : 1});
+         return new NextResponse(JSON.stringify(fetchedWithCategory), {
+           status: 200,
+         });
+
+    }
+    if(filter === 'ratingDescending') {
+      const fetchedWithCategory = await Movie.find({global_category : category}).sort({imdbRating : -1});
+         return new NextResponse(JSON.stringify(fetchedWithCategory), {
+           status: 200,
+         });
+
+
+   }
    return new NextResponse(JSON.stringify(fetchedWithCategory), {status:200})
   } catch (error) {
   return new NextResponse(JSON.stringify(error.message), {status:500})
   
  }
 }
+
+

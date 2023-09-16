@@ -6,16 +6,17 @@ import React from 'react'
 const ActionButtons = () => {
 
 
-  const { status } = useSession();
+  const { status , data } = useSession();
+  console.log(data)
   console.log(status);
 
   return (
     <div className='hidden md:flex'>
       {status === 'authenticated' ? (
         <div className='flex space-x-4'>
-          <div className='flex'>
+          <div className='flex gap-2'>
           <p>image</p>
-          <span>{status}</span>
+          <span>{data?.user?.username}</span>
           </div>
           <button onClick={() => signOut()}>Logout</button>
         </div>

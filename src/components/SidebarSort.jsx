@@ -1,17 +1,16 @@
-"use client"
-import React, { useState } from 'react'
-import {AiOutlineRight} from 'react-icons/ai'
+'use client';
+import React, { useState } from 'react';
+import { AiOutlineRight } from 'react-icons/ai';
 
-const SidebarSort = () => {
+const SidebarSort = ({setFilter }) => {
   const [sortDrawer, setSortDrawer] = useState(false);
-  const [sortSelect, setSortSelect] = useState('ratingDescending')
   return (
     <div className='h-4/5 w-full py-2 bg-white ring-1 outline-none ring-slate-600/20 shadow-lg rounded-sm mt-2 px-2 border divide-y'>
       <h2
         className='cursor-pointer font-semibold text-lg mb-2 flex justify-between items-center'
         onClick={() => setSortDrawer(!sortDrawer)}
       >
-        Filter <AiOutlineRight size={20}/>
+        Filter <AiOutlineRight size={20} />
       </h2>
       {sortDrawer && (
         <div className='w-full'>
@@ -20,6 +19,7 @@ const SidebarSort = () => {
               name=''
               id=''
               className='border-none outline-none cursor-pointer'
+              onChange={(e) => setFilter(e.target.value)}
             >
               <option
                 value='titleDescending'
@@ -36,14 +36,12 @@ const SidebarSort = () => {
               <option
                 value='ratingAscending'
                 className='outline-none border-none'
-                onClick={() => setSortSelect('ratingAscending')}
               >
                 Rating Ascending
               </option>
               <option
                 value='ratingDescending'
                 className='outline-none border-none'
-                onClick={() => setSortSelect('ratingDescending')}
               >
                 Rating Descending
               </option>
@@ -51,9 +49,8 @@ const SidebarSort = () => {
           </div>
         </div>
       )}
-      
     </div>
   );
-}
+};
 
-export default SidebarSort
+export default SidebarSort;
